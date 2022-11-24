@@ -9,7 +9,7 @@ function App() {
 
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
+    <div className="container__main w-full h-screen flex items-center justify-center">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />

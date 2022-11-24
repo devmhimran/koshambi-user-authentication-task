@@ -10,4 +10,8 @@
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
-
+.container__main{
+  background-image: url('../src/assets/bg__image.png');
+  background-size: cover;
+  background-position: center;
+}
