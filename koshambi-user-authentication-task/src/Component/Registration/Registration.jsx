@@ -1,7 +1,7 @@
 import { Button, Input } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { set, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import registerImg from '../../assets/login__img.png'
 import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../firebase.init';
@@ -19,8 +19,13 @@ const Registration = () => {
     const [photoImg, setPhotoImg] = useState('');
     const [passError, setPassError] = useState('');
     const imageApi = 'ef367f576eca302d4916e3889c6e0cc6';
+    const navigate = useNavigate();
+    const location = useLocation();
     let pwdError;
-
+    let from = location.state?.from?.pathname || "/";
+    if(user){
+        navigate(from, {replace:true});
+    }
     const handleRegister = async (data) => {
 
         const name = data.name;
@@ -54,7 +59,7 @@ const Registration = () => {
                             We can't wait to get to know you better!</p>
                     </div>
                 </div>
-                <div className="register__input border-l p-7">
+                <div className="register__input border-l p-7 bg-white">
                     <h2 className='text-center font-semibold text-2xl mb-8'>Register</h2>
                     <form onSubmit={handleSubmit(handleRegister)}>
                         <div className="w-full py-4">
