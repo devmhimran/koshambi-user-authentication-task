@@ -27,20 +27,6 @@ const Registration = () => {
         const email = data.email;
         const password = data.password;
         const reTypePassword = data.rePassword;
-        // const profileImage = data.profileImage;
-        // console.log(profileImage)
-        // const formData = new FormData();
-        // formData.append('image', profileImage);
-        // const imgUrl = `https://api.imgbb.com/1/upload?key=${imageApi}`;
-        // fetch(imgUrl, {
-        //     method: 'POST',
-        //     body: formData
-        // })
-        //     .then(res => res.json())
-        //     .then((result) => {
-        //         const profileImg = result.data.image.url;
-        //         setPhotoImg(profileImg)
-        //     })
 
         if (password !== reTypePassword) {
             pwdError = "Password doesn't match"
@@ -57,7 +43,7 @@ const Registration = () => {
     // console.log(error.message)
 
     return (
-        <div className='card border w-4/5 md:w-6/12 lg:w-5/12 shadow rounded-lg'>
+        <div className='card bg-white border w-4/5 md:w-6/12 lg:w-5/12 shadow rounded-lg'>
             <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="register__image lg:flex items-center p-8 md:hidden hidden">
                     <div className="register__form__content">
