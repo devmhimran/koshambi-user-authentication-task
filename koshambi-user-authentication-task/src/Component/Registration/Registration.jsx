@@ -1,6 +1,6 @@
 import { Button, Input } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import registerImg from '../../assets/login__img.png'
 import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useUpdateProfile } from 'react-firebase-hooks/auth';
@@ -15,57 +15,53 @@ const Registration = () => {
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
     const [updateProfile, updating, profileError] = useUpdateProfile(auth);
-    const [sendEmailVerification, sending, emailError] = useSendEmailVerification(
-        auth
-      );
+    const [sendEmailVerification, sending, emailError] = useSendEmailVerification(auth);
     const [photoImg, setPhotoImg] = useState('');
+    const [passError, setPassError] = useState('');
     const imageApi = 'ef367f576eca302d4916e3889c6e0cc6';
     let pwdError;
-    
-    const handleRegister = async (data, e) => {
-        e.preventDefault();
+
+    const handleRegister = async (data) => {
+
         const name = data.name;
         const email = data.email;
         const password = data.password;
         const reTypePassword = data.rePassword;
-        const profileImage = data.profileImage[0];
-        const formData = new FormData();
-        formData.append('image', profileImage);
-        const imgUrl = `https://api.imgbb.com/1/upload?key=${imageApi}`;
-        fetch(imgUrl, {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then((result) => {
-                const profileImg = result.data.image.url;
-                setPhotoImg(profileImg)
-            })
+        // const profileImage = data.profileImage;
+        // console.log(profileImage)
+        // const formData = new FormData();
+        // formData.append('image', profileImage);
+        // const imgUrl = `https://api.imgbb.com/1/upload?key=${imageApi}`;
+        // fetch(imgUrl, {
+        //     method: 'POST',
+        //     body: formData
+        // })
+        //     .then(res => res.json())
+        //     .then((result) => {
+        //         const profileImg = result.data.image.url;
+        //         setPhotoImg(profileImg)
+        //     })
 
-            if(password !== reTypePassword){
-                pwdError = "Password doesn't match"
-            }
-            // const photoImageUpdate = {
-            //     photoURL: photoImg
-            // }
-        await createUserWithEmailAndPassword(email, password);
-        await updateProfile({displayName: name});
-        console.log('profile image', profileImage, 'url')
-        await updateProfile({photoURL: photoImg});
-        
-        await sendEmailVerification();
-      
+        if (password !== reTypePassword) {
+            pwdError = "Password doesn't match"
+            setPassError(pwdError);
+        } else {
+            await createUserWithEmailAndPassword(email, password);
+            await updateProfile({ displayName: name });;
+            await sendEmailVerification();
+        }
+
+
     }
-    console.log(error, profileError, emailError, user, photoImg)
-    console.log(user)
+    // console.log(error, profileError, emailError, user, photoImg)
+    // console.log(error.message)
 
     return (
-        <div className='card border w-5/12 rounded-lg'>
-            <div className="grid grid-cols-2 gap-4">
-                <div className="register__image flex items-center px-8 py-12">
-                    {/* <img className='w-5/12' src={registerImg} alt="" /> */}
+        <div className='card border w-4/5 md:w-6/12 lg:w-5/12 shadow rounded-lg'>
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="register__image lg:flex items-center p-8 md:hidden hidden">
                     <div className="register__form__content">
-                        <h2 className='font-bold text-4xl capitalize mb-6'>Welcome to our registration page!</h2>
+                        <h2 className='font-extrabold text-[#262524] text-4xl capitalize mb-6 leading-snug'>Welcome to our registration page!</h2>
                         <p>
                             We are excited to have you as a member of our community. To get started, please fill out the form below.
                             Once you have completed the form, you will be able to access all of our features and services.
@@ -147,28 +143,17 @@ const Registration = () => {
                                 }
                             />
 
-                            {errors.rePassword?.type === 'required' && <small className='text-red-500'>{errors.rePassword?.message}</small>}
-                            {errors.rePassword?.type === 'minLength' && <small className='text-red-500'>{errors.rePassword?.message}</small>}
+                            {
+                                errors.rePassword?.type === 'required' && <small className='text-red-500'>{errors.rePassword?.message}</small>
+                                && <small className='text-red-500'>{passError}</small>
+                            }
+                            {errors.rePassword?.type === 'minLength' && <small className='text-red-500 block'>{errors.rePassword?.message}</small>
+                               
+                            }
+                            {passError ? <><small className='text-red-500'>{passError}</small></> : ''}
+                            {error ? <><small className='text-red-500'>{error.message}</small></> : ''}
+                           
                         </div>
-                        {/* <div className="w-full py-3">
-                            <input type="file" className="block w-full text-sm text-slate-500
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-full file:border-0
-                            file:text-sm file:font-semibold
-                            file:bg-violet-50 file:text-violet-700
-                            hover:file:bg-violet-100"
-                                name='profileImage'
-                                {
-                                ...register('profileImage', {
-                                    required: {
-                                        value: true,
-                                        message: "Profile image required"
-                                    }
-                                })
-                                }
-                            />
-                            {errors.profileImage?.type === 'required' && <small className='text-red-500'>{errors.profileImage?.message}</small>}
-                        </div> */}
                         <div className="w-full py-4">
                             <Button type='submit' fullWidth>register</Button>
                         </div>
