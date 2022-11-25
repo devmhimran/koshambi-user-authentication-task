@@ -1,16 +1,63 @@
 import { Button, Input } from '@material-tailwind/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import registerImg from '../../assets/login__img.png'
+import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useUpdateProfile } from 'react-firebase-hooks/auth';
+import auth from '../firebase.init';
 
 const Registration = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => console.log(data);
-    const handleRegister = (data) => {
-        // e.preventDefault();
-        console.log(data)
+    const [
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        error,
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, profileError] = useUpdateProfile(auth);
+    const [sendEmailVerification, sending, emailError] = useSendEmailVerification(
+        auth
+      );
+    const [photoImg, setPhotoImg] = useState('');
+    const imageApi = 'ef367f576eca302d4916e3889c6e0cc6';
+    let pwdError;
+    
+    const handleRegister = async (data, e) => {
+        e.preventDefault();
+        const name = data.name;
+        const email = data.email;
+        const password = data.password;
+        const reTypePassword = data.rePassword;
+        const profileImage = data.profileImage[0];
+        const formData = new FormData();
+        formData.append('image', profileImage);
+        const imgUrl = `https://api.imgbb.com/1/upload?key=${imageApi}`;
+        fetch(imgUrl, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then((result) => {
+                const profileImg = result.data.image.url;
+                setPhotoImg(profileImg)
+            })
+
+            if(password !== reTypePassword){
+                pwdError = "Password doesn't match"
+            }
+            // const photoImageUpdate = {
+            //     photoURL: photoImg
+            // }
+        await createUserWithEmailAndPassword(email, password);
+        await updateProfile({displayName: name});
+        console.log('profile image', profileImage, 'url')
+        await updateProfile({photoURL: photoImg});
+        
+        await sendEmailVerification();
+      
     }
+    console.log(error, profileError, emailError, user, photoImg)
+    console.log(user)
 
     return (
         <div className='card border w-5/12 rounded-lg'>
@@ -21,7 +68,7 @@ const Registration = () => {
                         <h2 className='font-bold text-4xl capitalize mb-6'>Welcome to our registration page!</h2>
                         <p>
                             We are excited to have you as a member of our community. To get started, please fill out the form below.
-                            Once you have completed the form, you will be able to access all of our features and services. 
+                            Once you have completed the form, you will be able to access all of our features and services.
                             We can't wait to get to know you better!</p>
                     </div>
                 </div>
@@ -103,13 +150,14 @@ const Registration = () => {
                             {errors.rePassword?.type === 'required' && <small className='text-red-500'>{errors.rePassword?.message}</small>}
                             {errors.rePassword?.type === 'minLength' && <small className='text-red-500'>{errors.rePassword?.message}</small>}
                         </div>
-                        <div className="w-full py-3">
+                        {/* <div className="w-full py-3">
                             <input type="file" className="block w-full text-sm text-slate-500
                             file:mr-4 file:py-2 file:px-4
                             file:rounded-full file:border-0
                             file:text-sm file:font-semibold
                             file:bg-violet-50 file:text-violet-700
                             hover:file:bg-violet-100"
+                                name='profileImage'
                                 {
                                 ...register('profileImage', {
                                     required: {
@@ -120,13 +168,13 @@ const Registration = () => {
                                 }
                             />
                             {errors.profileImage?.type === 'required' && <small className='text-red-500'>{errors.profileImage?.message}</small>}
-                        </div>
+                        </div> */}
                         <div className="w-full py-4">
                             <Button type='submit' fullWidth>register</Button>
                         </div>
                     </form>
                     <div className="create__account">
-                        <p className='text-base'>Not registered? <Link className='text-blue-400' to='/registration'>Create New one</Link> </p>
+                        <p className='text-base'>Already have account? <Link className='text-blue-400' to='/login'>Login</Link> </p>
                     </div>
                 </div>
             </div>
