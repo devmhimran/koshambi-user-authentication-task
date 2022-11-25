@@ -22,7 +22,7 @@ const Registration = () => {
     const navigate = useNavigate();
     const location = useLocation();
     let pwdError;
-    let from = location.state?.from?.pathname || "/";
+    let from = location.state?.from?.pathname || "/login";
     if(user){
         navigate(from, {replace:true});
     }

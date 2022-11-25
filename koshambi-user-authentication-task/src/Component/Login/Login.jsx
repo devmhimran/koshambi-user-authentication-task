@@ -13,7 +13,7 @@ const Login = () => {
     if (error) {
         loginError = error.message;
     }
-    let from = location.state?.from?.pathname || "/";
+    let from = location.state?.from?.pathname || "/profile";
     if (user) {
         navigate(from, { replace: true });
     }
@@ -41,7 +41,7 @@ const Login = () => {
                         <div className="w-full py-4">
                             <Input type="password" label="Password" name='password' required/>
                             <Link to='/forgot-password'><small className='text-blue-400'>Forget password?</small></Link>
-                            <small className='text-red-500'>{loginError}</small>
+                            <small className='text-red-500 block'>{loginError}</small>
                         </div>
                         <div className="w-full py-4">
                             <Button type='submit' fullWidth>Login</Button>
