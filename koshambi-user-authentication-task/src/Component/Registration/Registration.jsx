@@ -2,9 +2,9 @@ import { Button, Input } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { set, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import registerImg from '../../assets/login__img.png'
 import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../firebase.init';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Registration = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -14,6 +14,7 @@ const Registration = () => {
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
+
     const [updateProfile, updating, profileError] = useUpdateProfile(auth);
     const [sendEmailVerification, sending, emailError] = useSendEmailVerification(auth);
     const [photoImg, setPhotoImg] = useState('');
@@ -22,10 +23,11 @@ const Registration = () => {
     const navigate = useNavigate();
     const location = useLocation();
     let pwdError;
-    let from = location.state?.from?.pathname || "/login";
-    if(user){
-        navigate(from, {replace:true});
+    let from = location.state?.from?.pathname || "/profile";
+    if (user) {
+        navigate(from, { replace: true });
     }
+
     const handleRegister = async (data) => {
 
         const name = data.name;
@@ -38,14 +40,12 @@ const Registration = () => {
             setPassError(pwdError);
         } else {
             await createUserWithEmailAndPassword(email, password);
-            await updateProfile({ displayName: name });;
+            await updateProfile({ displayName: name });
             await sendEmailVerification();
         }
-
-
     }
-    // console.log(error, profileError, emailError, user, photoImg)
-    // console.log(error.message)
+
+
 
     return (
         <div className='card bg-white border w-4/5 md:w-6/12 lg:w-5/12 shadow rounded-lg'>
@@ -68,12 +68,7 @@ const Registration = () => {
                                     required: {
                                         value: true,
                                         message: "Name Required"
-                                    },
-                                    pattern: {
-                                        value: /^[A-Za-z]+$/i,
-                                        message: "Enter valid name"
                                     }
-
                                 })}
                             />
 
@@ -139,19 +134,21 @@ const Registration = () => {
                                 && <small className='text-red-500'>{passError}</small>
                             }
                             {errors.rePassword?.type === 'minLength' && <small className='text-red-500 block'>{errors.rePassword?.message}</small>
-                               
+
                             }
                             {passError ? <><small className='text-red-500'>{passError}</small></> : ''}
-                            {error ? <><small className='text-red-500'>{error.message}</small></> : ''}
-                           
+                            {error ? <><small className='text-red-500'>{error?.message}</small></> : ''}
+
                         </div>
                         <div className="w-full py-4">
                             <Button type='submit' fullWidth>register</Button>
                         </div>
                     </form>
-                    <div className="create__account">
+                    <SocialLogin />
+                    <div className="create__account mt-3">
                         <p className='text-base'>Already have account? <Link className='text-blue-400' to='/login'>Login</Link> </p>
                     </div>
+
                 </div>
             </div>
         </div>

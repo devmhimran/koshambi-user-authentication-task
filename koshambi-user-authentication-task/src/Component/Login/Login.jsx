@@ -4,6 +4,7 @@ import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import loginImg from '../../assets/task__login.gif'
 import auth from '../firebase.init';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Login = () => {
     const location = useLocation();
@@ -17,7 +18,7 @@ const Login = () => {
     if (user) {
         navigate(from, { replace: true });
     }
-    const handleLogin = (e) =>{
+    const handleLogin = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
@@ -36,10 +37,10 @@ const Login = () => {
                     <h2 className='text-center font-semibold text-2xl mb-8'>Login</h2>
                     <form onSubmit={handleLogin}>
                         <div className="w-full py-4">
-                            <Input type="email" label="Email" name='email' required/>
+                            <Input type="email" label="Email" name='email' required />
                         </div>
                         <div className="w-full py-4">
-                            <Input type="password" label="Password" name='password' required/>
+                            <Input type="password" label="Password" name='password' required />
                             <Link to='/forgot-password'><small className='text-blue-400'>Forget password?</small></Link>
                             <small className='text-red-500 block'>{loginError}</small>
                         </div>
@@ -47,7 +48,8 @@ const Login = () => {
                             <Button type='submit' fullWidth>Login</Button>
                         </div>
                     </form>
-                    <div className="create__account">
+                    <SocialLogin />
+                    <div className="create__account mt-3">
                         <p className='text-base'>Not registered? <Link className='text-blue-400' to='/registration'>Create New one</Link> </p>
                     </div>
                 </div>

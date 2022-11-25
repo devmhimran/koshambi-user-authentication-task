@@ -3,7 +3,7 @@ import React from 'react';
 const Loading = () => {
     return (
         <div className='w-full h-screen'>
-            <div class="preloader"></div>
+            <div className="preloader"></div>
         </div>
     );
 };
