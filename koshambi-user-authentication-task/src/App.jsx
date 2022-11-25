@@ -7,6 +7,7 @@ import Registration from './Component/Registration/Registration'
 import ForgotPassword from './Component/ForgotPassword/ForgotPassword'
 import RequireAuth from './Component/RequireAuth/RequireAuth'
 import Profile from './Component/Profile/Profile'
+import Home from './Component/Home/Home'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
   return (
     <div className="container__main w-full h-screen flex items-center justify-center">
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/registration" element={<ForgotPassword />} />
