@@ -40,7 +40,7 @@ const Login = () => {
                         </div>
                         <div className="w-full py-4">
                             <Input type="password" label="Password" name='password' required/>
-                            <Link to='/forgot-password'><small>Forgot password?</small></Link>
+                            <Link to='/forgot-password'><small className='text-blue-400'>Forget password?</small></Link>
                             <small className='text-red-500'>{loginError}</small>
                         </div>
                         <div className="w-full py-4">
