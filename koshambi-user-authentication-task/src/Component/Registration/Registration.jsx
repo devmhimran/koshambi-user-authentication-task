@@ -51,8 +51,10 @@ const Registration = () => {
         }
     }
 
+    // const [userDetail] = useHook(user, name);
+
     if(gUser){
-        const [userDetail] = useHook(gUser, gUser?.displayName);
+        const [userDetail] = useHook(gUser, gUser?.user.displayName);
     }else if(user){
         const [userDetail] = useHook(user, name);
     }else{
