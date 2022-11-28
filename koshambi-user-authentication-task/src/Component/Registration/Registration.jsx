@@ -2,9 +2,10 @@ import { Button, Input } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { set, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSendEmailVerification, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../firebase.init';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import useHook from '../Hook/useHook';
 
 const Registration = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -14,7 +15,7 @@ const Registration = () => {
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
-
+    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [updateProfile, updating, profileError] = useUpdateProfile(auth);
     const [sendEmailVerification, sending, emailError] = useSendEmailVerification(auth);
     const [photoImg, setPhotoImg] = useState('');
@@ -27,7 +28,11 @@ const Registration = () => {
     if (user) {
         navigate(from, { replace: true });
     }
-
+    
+    const handleGoogleLogin = () => {
+        signInWithGoogle();
+    }
+    const [userDetail] = useHook(user || gUser);
     const handleRegister = async (data) => {
 
         const name = data.name;
@@ -144,7 +149,12 @@ const Registration = () => {
                             <Button type='submit' fullWidth>register</Button>
                         </div>
                     </form>
-                    <SocialLogin />
+                    <div>
+                        <hr className='py-2' />
+                        <div className="googleLogin">
+                            <Button fullWidth onClick={handleGoogleLogin}>Google Login</Button>
+                        </div>
+                    </div>
                     <div className="create__account mt-3">
                         <p className='text-base'>Already have account? <Link className='text-blue-400' to='/login'>Login</Link> </p>
                     </div>
