@@ -14,7 +14,7 @@ const useHook = (user, name) => {
     
     useEffect(() => {
     if (email) {
-        fetch(`http://localhost:5000/users/${email}`, {
+        fetch(`https://koshambi-user-authentication-server.vercel.app/users/${email}`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
