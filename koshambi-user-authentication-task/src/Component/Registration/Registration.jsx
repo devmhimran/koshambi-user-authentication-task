@@ -18,21 +18,21 @@ const Registration = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [updateProfile, updating, profileError] = useUpdateProfile(auth);
     const [sendEmailVerification, sending, emailError] = useSendEmailVerification(auth);
-    const [photoImg, setPhotoImg] = useState('');
+    const [name, setName] = useState('');
     const [passError, setPassError] = useState('');
     const imageApi = 'ef367f576eca302d4916e3889c6e0cc6';
     const navigate = useNavigate();
     const location = useLocation();
     let pwdError;
     let from = location.state?.from?.pathname || "/profile";
-    if (user) {
+    if (user || gUser) {
         navigate(from, { replace: true });
     }
     
     const handleGoogleLogin = () => {
         signInWithGoogle();
     }
-    const [userDetail] = useHook(user || gUser);
+    
     const handleRegister = async (data) => {
 
         const name = data.name;
@@ -44,13 +44,22 @@ const Registration = () => {
             pwdError = "Password doesn't match"
             setPassError(pwdError);
         } else {
+            setName(name)
             await createUserWithEmailAndPassword(email, password);
             await updateProfile({ displayName: name });
-            await sendEmailVerification();
+            await sendEmailVerification(); 
         }
     }
 
+    if(gUser){
+        const [userDetail] = useHook(gUser, gUser?.displayName);
+    }else if(user){
+        const [userDetail] = useHook(user, name);
+    }else{
+        const [userDetail] = useHook(user, 'User Name');
+    }
 
+    // console.log(user?.displayName)
 
     return (
         <div className='card bg-white border w-4/5 md:w-6/12 lg:w-5/12 shadow rounded-lg'>
